@@ -6,7 +6,7 @@ import (
 	"github.com/onet-team/hackernews/internal/auth"
 
 	"github.com/go-chi/chi"
-	hackernews "github.com/onet-team/hackernews"
+	//	hackernews "github.com/onet-team/hackernews"
 	database "github.com/onet-team/hackernews/internal/pkg/db/mysql"
 
 	"log"
@@ -46,11 +46,9 @@ func main() {
 
 	database.InitDB()
 	database.Migrate()
-	server := handler.NewDefaultServer(hackernews.
+	server := handler.NewDefaultServer(generated.
 		NewExecutableSchema(
-			hackernews.
-				Config{Resolvers: &hackernews.
-				Resolver{}}))
+			generated.Config{Resolvers: &graph.Resolver{}}))
 	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", server)
 

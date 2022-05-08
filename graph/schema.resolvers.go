@@ -20,7 +20,7 @@ func (r *mutationResolver) CreateLink(ctx context.Context, input model.NewLink) 
 	link.Title = input.Title
 	link.Address = input.Address
 	linkID := link.Save()
-	return &model.Link{ID: strconv.FormatInt(linkID, 10), Title: link.Title, Address: link.Address}, ni
+	return &model.Link{ID: strconv.FormatInt(linkID, 10), Title: link.Title, Address: link.Address}, nil
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (string, error) {
