@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/onet-team/hackernews/graph/generated"
 	"github.com/onet-team/hackernews/internal/auth"
 
@@ -29,13 +31,15 @@ func main() {
 
 	database.InitDB()
 	database.Migrate()
+
 	server := handler.NewDefaultServer(generated.
 		NewExecutableSchema(
 			generated.
 				Config{Resolvers: nil}))
+
 	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", server)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, router))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), router))
 }
