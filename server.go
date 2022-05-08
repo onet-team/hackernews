@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/onet-team/hackernews/graph"
 	"github.com/onet-team/hackernews/graph/generated"
 	"github.com/onet-team/hackernews/internal/auth"
 
@@ -19,21 +16,6 @@ import (
 )
 
 const defaultPort = "8085"
-
-func main2() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = defaultPort
-	}
-
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
-
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
-
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
-}
 
 func main() {
 	port := os.Getenv("PORT")
