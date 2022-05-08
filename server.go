@@ -1,12 +1,13 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/onet-team/hackernews/graph"
 	"github.com/onet-team/hackernews/graph/generated"
 	"github.com/onet-team/hackernews/internal/auth"
 
 	"github.com/go-chi/chi"
-	//	hackernews "github.com/onet-team/hackernews"
 	database "github.com/onet-team/hackernews/internal/pkg/db/mysql"
 
 	"log"
@@ -31,7 +32,7 @@ func main2() {
 	http.Handle("/query", srv)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
 
 func main() {
@@ -48,7 +49,8 @@ func main() {
 	database.Migrate()
 	server := handler.NewDefaultServer(generated.
 		NewExecutableSchema(
-			generated.Config{Resolvers: &graph.Resolver{}}))
+			generated.
+				Config{Resolvers: nil}))
 	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", server)
 
