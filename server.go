@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/onet-team/hackernews/graph"
+	"fmt"
+
 	"github.com/onet-team/hackernews/graph/generated"
 	"github.com/onet-team/hackernews/internal/auth"
 
 	"github.com/go-chi/chi"
-	//	hackernews "github.com/onet-team/hackernews"
 	database "github.com/onet-team/hackernews/internal/pkg/db/mysql"
 
 	"log"
@@ -18,21 +18,6 @@ import (
 )
 
 const defaultPort = "8085"
-
-func main2() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = defaultPort
-	}
-
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
-
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
-
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
-}
 
 func main() {
 	port := os.Getenv("PORT")
@@ -46,12 +31,15 @@ func main() {
 
 	database.InitDB()
 	database.Migrate()
+
 	server := handler.NewDefaultServer(generated.
 		NewExecutableSchema(
-			generated.Config{Resolvers: &graph.Resolver{}}))
+			generated.
+				Config{Resolvers: nil}))
+
 	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", server)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, router))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), router))
 }
